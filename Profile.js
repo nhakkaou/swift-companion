@@ -8,7 +8,7 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
-// import { ProgressBar } from 'react-native-paper';
+import { ProgressBar } from "react-native-paper";
 import test from "./test.json";
 import coallition from "./coallition.json";
 import Chart from "./Componenets/Chart";
@@ -32,8 +32,8 @@ const Flex = () => {
     >
       <StatusBar animated={true} backgroundColor="#61dafb" hidden={false} />
       <ImageBackground source={cover} resizeMode="cover" style={styles.image}>
-        <Image src={test.image_url} style={styles.img} />
-        <View style={{ backgroundColor: "black", opacity: "80%", padding: 20 }}>
+        <Image source={{ uri: `${test.image_url}` }} style={styles.img} />
+        <View style={{ backgroundColor: "black", opacity: "70%", padding: 20 }}>
           <Text style={styles.titleText}>{test.login}</Text>
           <Text style={styles.nameStyle}>
             {test.first_name} {test.last_name}
@@ -44,18 +44,24 @@ const Flex = () => {
           <Text style={styles.textStyle}>{test.email}</Text>
           <Text style={styles.inStyle}>Phone</Text>
           <Text style={styles.textStyle}>{test.phone}</Text>
-          <Text style={styles.inStyle}>wallet</Text>
+          <Text style={styles.inStyle}>Wallet</Text>
           <Text style={styles.textStyle}>{test.wallet}</Text>
-          <Text style={styles.inStyle}>correction point</Text>
+          <Text style={styles.inStyle}>Correction point</Text>
           <Text style={styles.textStyle}>{test.correction_point}</Text>
+          <Text style={styles.inStyle}>Level</Text>
+          <Text style={styles.textStyle}>{test.cursus_users[0].level}</Text>
         </View>
       </ImageBackground>
 
-      {/* <ProgressBar progress={} color={}/> */}
+      <ProgressBar
+        progress={"0" + test.cursus_users[0].level.toString().match(/.\d+/g)}
+        color={coallition.color}
+        style={{ height: 20, backgroundColor: "none" }}
+      ></ProgressBar>
 
-      <View style={{ flex: 2, borderColor: "black" }}>
+      {/* <View style={{ flex: 2, borderColor: "black" }}>
         <Chart />
-      </View>
+      </View> */}
       {/* </SafeAreaView> */}
     </View>
   );
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   titleText: {
-    fontSize: 29,
+    fontSize: 19,
     lineHeight: 50,
     fontWeight: "bold",
     color: "yellow",
@@ -80,27 +86,27 @@ const styles = StyleSheet.create({
   nameStyle: {
     color: "white",
     textAlign: "center",
-    lineHeight: 30,
+
     fontFamily: "Futura Medium",
-    fontSize: 22,
+    fontSize: 17,
   },
   textStyle: {
     color: "white",
     textAlign: "right",
-    lineHeight: 30,
     fontFamily: "Futura Medium",
-    fontSize: 22,
+    fontSize: 14,
   },
   img: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
+    borderRadius: "50%",
+    margin: "auto",
   },
   inStyle: {
     color: "#A061D1",
     textAlign: "left",
-    lineHeight: 30,
     fontFamily: "Futura Medium",
-    fontSize: 22,
+    fontSize: 14,
   },
 });
 
