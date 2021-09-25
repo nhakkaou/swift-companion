@@ -9,24 +9,26 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import axios from "axios";
-const Home = () => {
+const Home = (props) => {
   const [text, setvalue] = useState("");
   const [users, setUsers] = useState([]);
-  const token =
-    "c86336d41aaeb0b6e42b08c9a5689534e984b6f9e3bb30152bfaa31eace6e759";
-  useEffect(() => {
-    axios
-      .get("https://api.intra.42.fr/v2/users/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((rs) => console.log(rs))
-      .catch((er) => console.log(er));
-  }, []);
+  console.log(props);
+  const search = () => {
+    if (text)
+      axios
+        .get("https://api.intra.42.fr/v2/users/"+text, {
+          headers: {
+            Authorization: `Bearer ${props.token}`,
+          },
+        })
+        .then((rs) => {
+          console.log(rs);
+          setRes(rs)})
+        .catch((er) => alert(er));
+  };
   return (
     <View style={styles.container}>
-      <Image style={styles.logo} source={{ uri: "../assets/favicon.png" }} />
+      <Image style={styles.logo} source={{ uri: "../assets/1337.png" }} />
       <View style={styles.login_container}>
         <TextInput
           placeholder="Login.."
@@ -34,14 +36,20 @@ const Home = () => {
           onChangeText={(e) => setvalue(e)}
           value={text}
         />
-        <TouchableOpacity style={styles.button}>Search</TouchableOpacity>
-        {/* <Icon name="search" type="evilicon" color="#517fa4" /> */}
+        <TouchableOpacity onClick={() => search} style={styles.button}>
+          Search
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000",
+  },
   input: {
     width: 250,
     height: 30,
@@ -50,9 +58,8 @@ const styles = StyleSheet.create({
     color: "#292D39",
   },
   logo: {
-    width: 250,
-    height: 250,
-    // backgroundColor: "orange",
+    width: 500,
+    height: 500,
   },
   button: {
     backgroundColor: "#292D39",
