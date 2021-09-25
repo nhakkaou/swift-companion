@@ -1,50 +1,54 @@
 import * as React from "react";
-import HomeScreen from "./Home";
-import Profile from "./Profile";
-import { Icon } from "react-native-elements";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Charts from "./Charts";
-import Projects from "./Projects";
+import { Button, View, Text } from "react-native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { ProfileScreen, ProjectScreen, ChartScreen, HomeScreen } from "./Views";
+const MyTheme = {
+  dark: true,
+  colors: {
+    primary: "rgb(255, 45, 85)",
+    background: "#000",
+    card: "#292D39",
+    text: "white",
+    border: "#292D39",
+    notification: "rgb(255, 69, 58)",
+  },
+};
 
-const Tab = createBottomTabNavigator();
+const Drawer = createDrawerNavigator();
+// const Stack = createNativeStackNavigator();
 
-function App() {
+// function Root() {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen name="Profile" component={ProfileScreen} />
+//       <Stack.Screen name="Settings" component={SettingsScreen} />
+//     </Stack.Navigator>
+//   );
+// }
+
+export default function App() {
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === "Projects") {
-              iconName = "tasks";
-            } else if (route.name === "Profile") {
-              iconName = focused ? "vcard" : "vcard-o";
-            } else if (route.name === "Charts") {
-              iconName = "bar-chart";
-            }
-
-            // You can return any component that you like here!
-            return (
-              <Icon
-                name={iconName}
-                type="font-awesome"
-                size={size}
-                color={color}
-              />
-            );
-          },
-          tabBarActiveTintColor: "#A061D1",
-          tabBarInactiveTintColor: "gray",
-        })}
-      >
-        <Tab.Screen name="Projects" component={Projects} />
-        <Tab.Screen name="Charts" component={Charts} />
-        <Tab.Screen name="Profile" component={Profile} />
-      </Tab.Navigator>
+    <NavigationContainer theme={MyTheme}>
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen
+          name="Projects"
+          component={ProjectScreen}
+          options={{ headerShown: true }}
+        />
+        <Drawer.Screen
+          name="Charts"
+          component={ChartScreen}
+          options={{ headerShown: true }}
+        />
+        <Drawer.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: true }}
+        />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
-
-export default App;
