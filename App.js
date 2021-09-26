@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProfileScreen, ProjectScreen, ChartScreen, HomeScreen } from "./Views";
 import axios from "axios";
+import { Icon } from "react-native-elements";
 const MyTheme = {
   dark: true,
   colors: {
@@ -41,7 +42,7 @@ export default function App() {
         client_id: uid,
         client_secret: client,
       })
-      .then((tk) => (setToken(tk?.data.access_token)));
+      .then((tk) => setToken(tk?.data.access_token));
   }, 7200);
 
   const [result, setRes] = React.useState([]);
@@ -50,22 +51,48 @@ export default function App() {
   ) : (
     <NavigationContainer theme={MyTheme}>
       <Drawer.Navigator initialRouteName="Home">
-        <Drawer.Screen name="Profile" component={ProfileScreen} />
+        <Drawer.Screen
+          name="Profile"
+          component={ProfileScreen}
+          options={{
+            headerRight: () => (
+              <Icon
+                type="font-awesome-5"
+                name="sign-out-alt"
+                color="#000"
+                onPress={() => setRes([])}
+              />
+            ),
+          }}
+        />
         <Drawer.Screen
           name="Projects"
           component={ProjectScreen}
-          options={{ headerShown: true }}
+          options={{
+            headerRight: () => (
+              <Icon
+                type="font-awesome-5"
+                name="sign-out-alt"
+                color="#000"
+                onPress={() => setRes([])}
+              />
+            ),
+          }}
         />
         <Drawer.Screen
           name="Charts"
           component={ChartScreen}
-          options={{ headerShown: true }}
+          options={{
+            headerRight: () => (
+              <Icon
+                type="font-awesome-5"
+                name="sign-out-alt"
+                color="#000"
+                onPress={() => setRes([])}
+              />
+            ),
+          }}
         />
-        {/* // <Drawer.Screen
-        //   name="Home"
-        //   component={HomeScreen}
-        //   options={{ headerShown: true }}
-        // /> */}
       </Drawer.Navigator>
     </NavigationContainer>
   );
