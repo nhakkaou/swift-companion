@@ -6,7 +6,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProfileScreen, ProjectScreen, ChartScreen, HomeScreen } from "./Views";
 import axios from "axios";
 import { Icon } from "react-native-elements";
-const MyTheme = {
+const darkTheme = {
   dark: true,
   colors: {
     primary: "rgb(255, 45, 85)",
@@ -17,6 +17,17 @@ const MyTheme = {
     notification: "rgb(255, 69, 58)",
   },
 };
+// const lightTheme = {
+//   dark: false,
+//   colors: {
+//     primary: "rgb(255, 45, 85)",
+//     background: "white",
+//     card: "#292D39",
+//     text: "#000",
+//     border: "#292D39",
+//     notification: "rgb(255, 69, 58)",
+//   },
+// };
 const uid = "8b3f2aa1e1b4e9ea2ed2399b3783dba79813b948c9ecbb9555f7927a7b530e0a";
 const client =
   "fdf4044597bc43b22cf442e825051dda952c834d1d16d8aebfdb6c223df3a37d";
@@ -35,6 +46,8 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [token, setToken] = React.useState();
+  const [dark, setDark] = React.useState(true);
+
   setInterval(() => {
     axios
       .post("https://api.intra.42.fr/oauth/token", {
@@ -44,12 +57,12 @@ export default function App() {
       })
       .then((tk) => setToken(tk?.data.access_token));
   }, 7200);
-
+  console.log(dark);
   const [result, setRes] = React.useState([]);
   return result.length === 0 ? (
-    <HomeScreen set={setRes} token={token} />
+    <HomeScreen set={setRes} token={token} theme={dark} setTheme={setDark} />
   ) : (
-    <NavigationContainer theme={MyTheme}>
+    <NavigationContainer theme={dark ? darkTheme : DefaultTheme}>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen
           name="Profile"
