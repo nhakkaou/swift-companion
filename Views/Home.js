@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   Switch,
+  Text,
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
@@ -19,16 +20,30 @@ const Home = (props) => {
     props.setTheme(!props.theme);
   };
   const ft_search = () => {
+    console.log(text.toLocaleLowerCase());
     if (text)
       axios
-        .get("https://api.intra.42.fr/v2/users/" + text, {
+        .get("https://api.intra.42.fr/v2/users/" + text.toLocaleLowerCase(), {
           headers: {
             Authorization: `Bearer ${props.token}`,
           },
         })
         .then((rs) => {
-          console.log(rs);
-          props.set(rs);
+          axios
+            .get(
+              "https://api.intra.42.fr/v2/users/" + rs.data.id + "/coalitions",
+              {
+                headers: {
+                  Authorization: `Bearer ${props.token}`,
+                },
+              }
+            )
+            .then((coalition) =>
+              props.set({
+                user: rs.data,
+                coalition: coalition?.data[0],
+              })
+            );
         })
         .catch((er) => alert(er));
   };
@@ -50,11 +65,11 @@ const Home = (props) => {
             <TextInput
               placeholder="Login.."
               style={styles.input}
-              onChangeText={(e) => setvalue(e)}
+              onChangeText={(e) => setvalue(e.trim())}
               value={text}
             />
             <TouchableOpacity onPress={ft_search} style={styles.button}>
-              Search
+              <Text> Search</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -73,8 +88,8 @@ const styles = StyleSheet.create({
   },
   sousContainer: {
     justifyContent: "center",
+    // margin: "10",
     alignItems: "center",
-    margin: "auto",
   },
   input: {
     width: 250,
@@ -93,7 +108,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 1.5,
     color: "white",
-    // width: 75,
     height: 30,
     margin: "auto",
     marginTop: 20,

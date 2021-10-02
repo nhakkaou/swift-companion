@@ -66,7 +66,7 @@ export default function App() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen
           name="Profile"
-          component={ProfileScreen}
+          component={() => <ProfileScreen result={result} />}
           options={{
             headerRight: () => (
               <Icon
@@ -76,6 +76,7 @@ export default function App() {
                 onPress={() => setRes([])}
               />
             ),
+            result: result,
           }}
         />
         <Drawer.Screen
