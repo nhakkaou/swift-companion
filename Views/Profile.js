@@ -30,7 +30,7 @@ const Flex = ({ result }) => {
     return {
       color: color,
       textAlign: "left",
-      fontFamily: "Futura Medium",
+
       fontSize: 14,
     };
   }
@@ -180,13 +180,13 @@ const styles = StyleSheet.create({
   nameStyle: {
     color: "white",
     textAlign: "center",
-    fontFamily: "Futura Medium",
+
     fontSize: 17,
   },
   textStyle: {
     color: "white",
     textAlign: "right",
-    fontFamily: "Futura Medium",
+
     fontSize: 14,
   },
   img: {

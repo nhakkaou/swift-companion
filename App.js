@@ -46,9 +46,10 @@ const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [token, setToken] = React.useState();
+  // const [delay, setDelay] = React.useState(0);
   const [dark, setDark] = React.useState(true);
-
-  setInterval(() => {
+  React.useEffect(() => {
+    console.log("DKHALT");
     axios
       .post("https://api.intra.42.fr/oauth/token", {
         grant_type: "client_credentials",
@@ -56,7 +57,17 @@ export default function App() {
         client_secret: client,
       })
       .then((tk) => setToken(tk?.data.access_token));
-  }, 7200);
+  }, []);
+  setInterval(() => {
+    alert("Expire");
+    axios
+      .post("https://api.intra.42.fr/oauth/token", {
+        grant_type: "client_credentials",
+        client_id: uid,
+        client_secret: client,
+      })
+      .then((tk) => setToken(tk?.data.access_token));
+  }, 7200000);
   console.log(dark);
   const [result, setRes] = React.useState([]);
   return result.length === 0 ? (
