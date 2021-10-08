@@ -11,8 +11,9 @@ import {
 import { ProgressBar } from "react-native-paper";
 import { Avatar } from "react-native-paper";
 
-const Flex = ({ result }) => {
-  function coalition_style(bgcolor = "#68BBE3") {
+const Flex = ({ route }) => {
+  const { result, coalition } = route.params;
+  function coalition_style(bgcolor = "none") {
     return {
       backgroundColor: bgcolor,
       maxWidth: 60,
@@ -30,141 +31,158 @@ const Flex = ({ result }) => {
     return {
       color: color,
       textAlign: "left",
-
+      fontWeight: "500",
       fontSize: 14,
     };
   }
-  function titleText(color = "#000") {
+  function titleText(color = "#000", bold = "bold", size = 19) {
     return {
-      fontSize: 19,
+      fontSize: size,
       lineHeight: 50,
-      fontWeight: "bold",
+      fontWeight: bold,
       color: color,
       textAlign: "center",
     };
   }
-  console.log(result.coalition.color);
+  console.log(coalition[0]?.color);
   const image = {
-    uri: `${result?.user.image_url}`,
+    uri: `${result?.image_url}`,
   };
   const cover = {
-    uri: `${result.coalition?.cover_url}`,
+    uri: `${coalition[0]?.cover_url}`,
   };
   const img_coallition = {
-    uri: `${result.coalition.image_url}`,
+    uri: `${coalition[0]?.image_url}`,
   };
   return (
-    // <SafeAreaView>
-    <View
-      style={[
-        styles.container,
-        {
-          flexDirection: "column",
-          flex: 1,
-        },
-      ]}
-    >
-      <StatusBar
-        animated={true}
-        backgroundColor={result.coalition.color}
-        hidden={false}
-      />
-      <ImageBackground source={cover} resizeMode="cover" style={styles.image}>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", top: 0 }}>
-          <View style={coalition_style(result.coalition.color)}>
-            <Image source={img_coallition} style={styles.img_coallition} />
-          </View>
-          <Avatar.Image
-            size={200}
-            source={{ uri: `${result.user.image_url}` }}
-            style={styles.img}
-          />
-        </View>
-        <View style={{ backgroundColor: "black", opacity: "70%", padding: 20 }}>
-          <Text style={titleText(result.coalition.color)}>
-            {result.user.login}
-          </Text>
-          <Text style={styles.nameStyle}>
-            {result.user.first_name} {result.user.last_name}
-          </Text>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={inStyle(result.coalition.color)}>Grade</Text>
-            <Text style={styles.textStyle}>
-              {result.user.cursus_users[0].grade}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={inStyle(result.coalition.color)}>Email</Text>
-            <Text style={styles.textStyle}>{result.user.email}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={inStyle(result.coalition.color)}>Phone</Text>
-            <Text style={styles.textStyle}>{result.user.phone}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={inStyle(result.coalition.color)}>Wallet</Text>
-            <Text style={styles.textStyle}>{result.user.wallet}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={inStyle(result.coalition.color)}>
-              Correction point
-            </Text>
-            <Text style={styles.textStyle}>{result.user.correction_point}</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text style={inStyle(result.coalition.color)}>Level</Text>
-            <Text style={styles.textStyle}>
-              {result.user.cursus_users[0].level}
-            </Text>
-          </View>
-        </View>
-      </ImageBackground>
-
-      <ProgressBar
-        progress={
-          "0" + result.user.cursus_users[0].level.toString().match(/.\d+/g)
-        }
-        color={result.coalition.color}
-        style={{ height: 20, backgroundColor: "none" }}
-      ></ProgressBar>
-      {/* </SafeAreaView> */}
-    </View>
+    <SafeAreaView>
+      <View
+        style={[
+          styles.container,
+          {
+            flexDirection: "column",
+            flex: 1,
+          },
+        ]}
+      >
+        {result ? (
+          <>
+            <StatusBar
+              animated={true}
+              backgroundColor={coalition[0]?.color}
+              hidden={false}
+            />
+            <ImageBackground
+              source={cover}
+              resizeMode="cover"
+              style={styles.image}
+            >
+              <View style={{ flexDirection: "row", flexWrap: "wrap", top: 0 }}>
+                <View>
+                  <View style={coalition_style(coalition[0]?.color)}>
+                    <Image
+                      source={img_coallition}
+                      style={styles.img_coallition}
+                    />
+                  </View>
+                  <Text style={titleText(coalition[0]?.color, "500", 14)}>
+                    {coalition[0]?.name}
+                  </Text>
+                </View>
+                <Avatar.Image
+                  size={150}
+                  source={{ uri: `${result.image_url}` }}
+                  style={styles.img}
+                />
+              </View>
+            </ImageBackground>
+            {/* <View style={{ padding: 20 }}>
+              <Text style={titleText(coalition[0]?.color)}>
+                {result?.login}
+              </Text>
+              <Text style={styles.nameStyle}>
+                {result?.first_name} {result?.last_name}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={inStyle(coalition[0]?.color)}>Grade</Text>
+                <Text style={styles.textStyle}>
+                  {result.cursus_users[0].grade}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={inStyle(coalition[0].color)}>Email</Text>
+                <Text style={styles.textStyle}>{result.email}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={inStyle(coalition[0]?.color)}>Phone</Text>
+                <Text style={styles.textStyle}>{result?.phone}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={inStyle(coalition[0].color)}>Wallet</Text>
+                <Text style={styles.textStyle}>{result?.wallet}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={inStyle(coalition[0].color)}>
+                  Correction point
+                </Text>
+                <Text style={styles.textStyle}>{result.correction_point}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={inStyle(coalition[0].color)}>Level</Text>
+                <Text style={styles.textStyle}>
+                  {result.cursus_users[0].level}
+                </Text>
+              </View>
+            </View> */}
+            {/* <ProgressBar
+              progress={
+                "0" + result.cursus_users[0].level.toString().match(/.\d+/g)
+              }
+              color={`${coalition[0].color}`}
+              style={{ height: 20, backgroundColor: "white" }}
+            ></ProgressBar> */}
+          </>
+        ) : (
+          ""
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -174,7 +192,7 @@ const styles = StyleSheet.create({
     // padding: 20,
   },
   image: {
-    flex: 2,
+    flex: 1,
     justifyContent: "center",
   },
   nameStyle: {
@@ -186,14 +204,16 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "white",
     textAlign: "right",
-
+    fontWeight: "500",
     fontSize: 14,
   },
   img: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 100,
     margin: "auto",
+    marginTop: 10,
+    marginBottom: 10,
   },
   img_coallition: {
     width: 50,

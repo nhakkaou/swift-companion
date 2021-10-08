@@ -1,11 +1,9 @@
 import React from "react";
 import Chart from "../Componenets/Chart";
 import { View } from "react-native";
-const Charts = () => {
+const Charts = ({ route }) => {
   return (
-    <View style={{ flex: 2, borderColor: "black" }}>
-      <Chart />
-    </View>
+    <View style={{ flex: 2, borderColor: "black" }}>{/* <Chart /> */}</View>
   );
 };
 

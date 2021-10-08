@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import img from "../assets/1337.png";
+import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -10,22 +9,22 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
-import { Icon } from "react-native-elements";
 import axios from "axios";
-const Home = (props) => {
+const Home = ({ navigation, token, set, theme, setTheme }) => {
   const [text, setvalue] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
+  const [load, setLoad] = useState(false);
   const toggleSwitch = () => {
-    setIsEnabled((previousState) => !previousState);
-    props.setTheme(!props.theme);
+    setIsEnabled(!isEnabled);
+    setTheme(!theme);
   };
   const ft_search = () => {
-    console.log(text.toLocaleLowerCase());
+    setLoad(true);
     if (text)
       axios
         .get("https://api.intra.42.fr/v2/users/" + text.toLocaleLowerCase(), {
           headers: {
-            Authorization: `Bearer ${props.token}`,
+            Authorization: `Bearer ${token}`,
           },
         })
         .then((rs) => {
@@ -34,24 +33,29 @@ const Home = (props) => {
               "https://api.intra.42.fr/v2/users/" + rs.data.id + "/coalitions",
               {
                 headers: {
-                  Authorization: `Bearer ${props.token}`,
+                  Authorization: `Bearer ${token}`,
                 },
               }
             )
-            .then((coalition) =>
-              props.set({
-                user: rs.data,
-                coalition: coalition?.data[0],
-              })
-            );
+            .then((coalition) => {
+              // set({ result: rs?.data, coalition: coalition?.data });
+              navigation.navigate("Profile", {
+                coalition: coalition?.data,
+                result: rs?.data,
+              });
+            });
         })
-        .catch((er) => alert(er));
+        .catch((er) => {
+          setLoad(false);
+          alert(er);
+        });
   };
+
   return (
-    <View style={styles.container}>
+    <View style={{ backgroundColor: isEnabled ? "#fff" : "#000", flex: 1 }}>
       <View style={styles.Switch}>
         <Switch
-          trackColor={{ false: "#273746", true: "#A0E7E5" }}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
           thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
@@ -60,7 +64,7 @@ const Home = (props) => {
       </View>
       <View style={styles.sousContainer}>
         <Image style={styles.logo} source={require("../assets/1337.png")} />
-        {props.token ? (
+        {token && !load ? (
           <View style={styles.login_container}>
             <TextInput
               placeholder="Login.."
@@ -69,7 +73,7 @@ const Home = (props) => {
               value={text}
             />
             <TouchableOpacity onPress={ft_search} style={styles.button}>
-              <Text> Search</Text>
+              <Text> Search </Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -82,9 +86,6 @@ const Home = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    backgroundColor: "#000",
   },
   sousContainer: {
     justifyContent: "center",

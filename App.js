@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Button, View, Text } from "react-native";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+// import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProfileScreen, ProjectScreen, ChartScreen, HomeScreen } from "./Views";
 import axios from "axios";
@@ -17,21 +16,9 @@ const darkTheme = {
     notification: "rgb(255, 69, 58)",
   },
 };
-// const lightTheme = {
-//   dark: false,
-//   colors: {
-//     primary: "rgb(255, 45, 85)",
-//     background: "white",
-//     card: "#292D39",
-//     text: "#000",
-//     border: "#292D39",
-//     notification: "rgb(255, 69, 58)",
-//   },
-// };
 const uid = "8b3f2aa1e1b4e9ea2ed2399b3783dba79813b948c9ecbb9555f7927a7b530e0a";
 const client =
   "fdf4044597bc43b22cf442e825051dda952c834d1d16d8aebfdb6c223df3a37d";
-
 const Drawer = createDrawerNavigator();
 // const Stack = createNativeStackNavigator();
 
@@ -45,8 +32,23 @@ const Drawer = createDrawerNavigator();
 // }
 
 export default function App() {
+  const Home = ({ navigation }) => (
+    <HomeScreen
+      navigation={navigation}
+      set={setRes}
+      token={token}
+      theme={dark}
+      setTheme={setDark}
+    />
+  );
+
+  const Profile = ({ route, navigation }) => (
+    <ProfileScreen rslt={result} route={route} />
+  );
+  const Project = ({ route, navigation }) => (
+    <ProjectScreen navigation={navigation} route={route} result={result} />
+  );
   const [token, setToken] = React.useState();
-  // const [delay, setDelay] = React.useState(0);
   const [dark, setDark] = React.useState(true);
   React.useEffect(() => {
     console.log("DKHALT");
@@ -70,54 +72,67 @@ export default function App() {
   }, 7200000);
   console.log(dark);
   const [result, setRes] = React.useState([]);
-  return result.length === 0 ? (
-    <HomeScreen set={setRes} token={token} theme={dark} setTheme={setDark} />
-  ) : (
-    <NavigationContainer theme={dark ? darkTheme : DefaultTheme}>
-      <Drawer.Navigator initialRouteName="Home">
+  return (
+    <NavigationContainer
+      theme={dark ? darkTheme : DefaultTheme}
+      initialRouteName="Home"
+    >
+      <Drawer.Navigator>
+        <Drawer.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Drawer.Screen
           name="Profile"
-          component={() => <ProfileScreen result={result} />}
-          options={{
+          component={Profile}
+          options={({ navigation }) => ({
             headerRight: () => (
               <Icon
                 type="font-awesome-5"
                 name="sign-out-alt"
                 color="#000"
-                onPress={() => setRes([])}
+                onPress={() => navigation.navigate("Home")}
               />
             ),
-            result: result,
-          }}
+          })}
         />
         <Drawer.Screen
           name="Projects"
-          component={ProjectScreen}
+          component={Project}
           options={{
             headerRight: () => (
               <Icon
                 type="font-awesome-5"
                 name="sign-out-alt"
                 color="#000"
-                onPress={() => setRes([])}
+                onPress={() => navigation.navigate("Home")}
               />
             ),
           }}
         />
-        <Drawer.Screen
+        {/* <Drawer.Screen
           name="Charts"
-          component={ChartScreen}
+          component={({ route, navigation }) => (
+            <ChartScreen
+              navigation={navigation}
+              route={route}
+              result={result}
+            />
+          )}
           options={{
             headerRight: () => (
               <Icon
                 type="font-awesome-5"
                 name="sign-out-alt"
                 color="#000"
-                onPress={() => setRes([])}
+                onPress={() => navigation.navigate("Home")}
               />
             ),
           }}
-        />
+        /> */}
       </Drawer.Navigator>
     </NavigationContainer>
   );
