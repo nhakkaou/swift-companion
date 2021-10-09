@@ -46,7 +46,7 @@ export default function App() {
     <ProfileScreen rslt={result} route={route} />
   );
   const Project = ({ route, navigation }) => (
-    <ProjectScreen navigation={navigation} route={route} result={result} />
+    <ProjectScreen navigation={navigation} route={route} rslt={result} />
   );
   const [token, setToken] = React.useState();
   const [dark, setDark] = React.useState(true);
@@ -102,7 +102,7 @@ export default function App() {
         <Drawer.Screen
           name="Projects"
           component={Project}
-          options={{
+          options={({ navigation }) => ({
             headerRight: () => (
               <Icon
                 type="font-awesome-5"
@@ -111,7 +111,7 @@ export default function App() {
                 onPress={() => navigation.navigate("Home")}
               />
             ),
-          }}
+          })}
         />
         {/* <Drawer.Screen
           name="Charts"

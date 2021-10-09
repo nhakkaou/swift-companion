@@ -12,10 +12,10 @@ import {
 } from "react-native";
 
 import { Avatar } from "react-native-paper";
-import result from "./test.json";
-import coalition from "./coallition.json";
-const Flex = ({ route }) => {
-  // const { result, coalition } = route.params;
+// import result from "./test.json";
+// import coalition from "./coallition.json";
+const Flex = ({ route, rslt }) => {
+  let { result, coalition } = rslt;
   function coalition_style(bgcolor = "none") {
     return {
       backgroundColor: bgcolor,
@@ -47,7 +47,7 @@ const Flex = ({ route }) => {
       textAlign: "center",
     };
   }
-  console.log(coalition.image_url);
+  coalition = coalition.length > 0 ? coalition[0] : coalition;
   const image = {
     uri: `${result?.image_url}`,
   };
@@ -55,7 +55,7 @@ const Flex = ({ route }) => {
     uri: `${coalition?.cover_url}`,
   };
   const img_coallition = {
-    uri: `${coalition.image_url}`,
+    uri: `${coalition?.image_url}`,
   };
   return (
     <SafeAreaView>
@@ -215,6 +215,7 @@ const Flex = ({ route }) => {
                         // progress={`0${el.level.toString().match(/.\d+/g)}`}
                         progress={0.7}
                         color={coalition.color}
+                        style={{ width: 250 }}
                       />
                     </>
                   );

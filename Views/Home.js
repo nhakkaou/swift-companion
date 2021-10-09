@@ -8,6 +8,7 @@ import {
   Text,
   ActivityIndicator,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import axios from "axios";
 const Home = ({ navigation, token, set, theme, setTheme }) => {
@@ -38,11 +39,8 @@ const Home = ({ navigation, token, set, theme, setTheme }) => {
               }
             )
             .then((coalition) => {
-              // set({ result: rs?.data, coalition: coalition?.data });
-              navigation.navigate("Profile", {
-                coalition: coalition?.data,
-                result: rs?.data,
-              });
+              set({ result: rs?.data, coalition: coalition?.data });
+              navigation.navigate("Profile");
             });
         })
         .catch((er) => {
@@ -52,7 +50,9 @@ const Home = ({ navigation, token, set, theme, setTheme }) => {
   };
 
   return (
-    <View style={{ backgroundColor: isEnabled ? "#fff" : "#000", flex: 1 }}>
+    <SafeAreaView
+      style={{ backgroundColor: isEnabled ? "#fff" : "#000", flex: 1 }}
+    >
       <View style={styles.Switch}>
         <Switch
           trackColor={{ false: "#767577", true: "#81b0ff" }}
@@ -80,7 +80,7 @@ const Home = ({ navigation, token, set, theme, setTheme }) => {
           <ActivityIndicator size="large" color="#00ff00" />
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
