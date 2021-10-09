@@ -24,6 +24,7 @@
     "react-native-chart-kit": "^6.11.0",
     "react-native-elements": "^3.4.2",
     "react-native-paper": "^4.9.2",
+    "react-native-pathjs-charts": "^0.0.34",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12"
