@@ -118,20 +118,6 @@ export default function App() {
             ),
           })}
         />
-        {/* <Drawer.Screen
-          name="Chart"
-          component={ChartScreen}
-          options={({ navigation }) => ({
-            headerRight: () => (
-              <Icon
-                type="font-awesome-5"
-                name="sign-out-alt"
-                color="#000"
-                onPress={() => navigation.navigate("Home")}
-              />
-            ),
-          })}
-        /> */}
       </Drawer.Navigator>
     </NavigationContainer>
   );
