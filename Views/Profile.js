@@ -9,8 +9,9 @@ import {
   ImageBackground,
   ScrollView,
   Picker,
+  FlatList,
 } from "react-native";
-import { Svg } from "react-native-svg";
+import { SvgUri } from "react-native-svg";
 import { Avatar, ProgressBar } from "react-native-paper";
 // import result from "./test.json";
 // import coalition from "./coallition.json";
@@ -53,6 +54,26 @@ const Profile = ({ route, rslt, dark }) => {
   const img_coallition = {
     uri: `${coalition?.image_url}`,
   };
+  const renderItem = ({ item }) => {
+    return (
+      <View key={item.id}>
+        <Text
+          style={[
+            titleText(!dark ? "#000" : "#ffffff", "normal", 15),
+            { textAlign: "center" },
+          ]}
+        >
+          {item.name}
+        </Text>
+        <ProgressBar
+          progress={item.level / 10}
+          // progress={0.6}
+          color={coalition.color}
+          style={{ width: 250 }}
+        />
+      </View>
+    );
+  };
   return (
     <SafeAreaView>
       <ScrollView>
@@ -82,13 +103,22 @@ const Profile = ({ route, rslt, dark }) => {
                     left: 20,
                   }}
                 >
-                  <View style={coalition_style(coalition?.color)}>
-                    {/* <Svg
-                      uri="https://cdn.intra.42.fr/coalition/image/70/idealists.svg"
-                      width="100%"
-                      height="100%"
-                      color="#000"
-                    /> */}
+                  <View
+                    style={[
+                      coalition_style(coalition?.color),
+                      {
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 5,
+                      },
+                    ]}
+                  >
+                    <SvgUri
+                      uri={coalition?.image_url}
+                      width={"100%"}
+                      height={"100%"}
+                      fill="#fff"
+                    />
                   </View>
                   <Text style={titleText(coalition?.color, "500", 14)}>
                     {coalition?.name}
@@ -265,28 +295,18 @@ const Profile = ({ route, rslt, dark }) => {
               </View>
 
               <View
-                style={{ width: "100%", padding: 20, alignItems: "center" }}
+                style={{
+                  width: "100%",
+                  padding: 20,
+                  alignItems: "center",
+                  lineHeight: 10,
+                }}
               >
-                {result.cursus_users[0]?.skills.map((el, key) => {
-                  return (
-                    <View key={key}>
-                      <Text
-                        style={[
-                          titleText(!dark ? "#000" : "#ffffff", "normal", 15),
-                          { textAlign: "center" },
-                        ]}
-                      >
-                        {el.name}
-                      </Text>
-                      <ProgressBar
-                        progress={el.level / 10}
-                        // progress={0.6}
-                        color={coalition.color}
-                        style={{ width: 250 }}
-                      />
-                    </View>
-                  );
-                })}
+                <FlatList
+                  data={result.cursus_users[0]?.skills}
+                  renderItem={renderItem}
+                  keyExtractor={(item) => item.id}
+                />
               </View>
             </>
           ) : (
