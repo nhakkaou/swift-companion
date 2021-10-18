@@ -1,10 +1,10 @@
 import * as React from "react";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
-// import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { ProfileScreen, ProjectScreen, ChartScreen, HomeScreen } from "./Views";
+import { ProfileScreen, ProjectScreen, HomeScreen } from "./Views";
 import axios from "axios";
 import { Icon } from "react-native-elements";
+
 const darkTheme = {
   dark: true,
   colors: {
@@ -20,16 +20,6 @@ const uid = "8b3f2aa1e1b4e9ea2ed2399b3783dba79813b948c9ecbb9555f7927a7b530e0a";
 const client =
   "fdf4044597bc43b22cf442e825051dda952c834d1d16d8aebfdb6c223df3a37d";
 const Drawer = createDrawerNavigator();
-// const Stack = createNativeStackNavigator();
-
-// function Root() {
-//   return (
-//     <Stack.Navigator>
-//       <Stack.Screen name="Profile" component={ProfileScreen} />
-//       <Stack.Screen name="Settings" component={SettingsScreen} />
-//     </Stack.Navigator>
-//   );
-// }
 
 export default function App() {
   const Home = ({ navigation }) => (
@@ -43,35 +33,50 @@ export default function App() {
   );
 
   const Profile = ({ route, navigation }) => (
-    <ProfileScreen rslt={result} route={route} />
+    <ProfileScreen rslt={result} route={route} dark={dark} />
   );
   const Project = ({ route, navigation }) => (
-    <ProjectScreen navigation={navigation} route={route} rslt={result} />
+    <ProjectScreen
+      navigation={navigation}
+      route={route}
+      rslt={result}
+      dark={dark}
+    />
   );
-  const [token, setToken] = React.useState();
+  const [result, setRes] = React.useState([]);
+  const [token, setToken] = React.useState("");
+  const [delay, setDelay] = React.useState(7200000);
   const [dark, setDark] = React.useState(true);
   React.useEffect(() => {
     console.log("DKHALT");
     axios
-      .post("https://api.intra.42.fr/oauth/token", {
-        grant_type: "client_credentials",
-        client_id: uid,
-        client_secret: client,
+      .post(
+        "https://api.intra.42.fr/oauth/token",
+        {
+          grant_type: "client_credentials",
+          client_id: uid,
+          client_secret: client,
+        },
+        { timeout: 2000 }
+      )
+      .then((tk) => {
+        setToken(tk.data?.access_token);
+        setDelay(tk.data?.expires_in);
       })
-      .then((tk) => setToken(tk?.data.access_token));
+      .catch((er) => console.log(er));
+    console.log(token);
   }, []);
-  setInterval(() => {
-    alert("Expire");
-    axios
-      .post("https://api.intra.42.fr/oauth/token", {
-        grant_type: "client_credentials",
-        client_id: uid,
-        client_secret: client,
-      })
-      .then((tk) => setToken(tk?.data.access_token));
-  }, 7200000);
-  console.log(dark);
-  const [result, setRes] = React.useState([]);
+  // setInterval(() => {
+  //   alert("Expire");
+  //   axios
+  //     .post("https://api.intra.42.fr/oauth/token", {
+  //       grant_type: "client_credentials",
+  //       client_id: uid,
+  //       client_secret: client,
+  //     })
+  //     .then((tk) => setToken(tk?.data.access_token));
+  // }, delay);
+
   return (
     <NavigationContainer
       theme={dark ? darkTheme : DefaultTheme}
@@ -114,15 +119,9 @@ export default function App() {
           })}
         />
         {/* <Drawer.Screen
-          name="Charts"
-          component={({ route, navigation }) => (
-            <ChartScreen
-              navigation={navigation}
-              route={route}
-              result={result}
-            />
-          )}
-          options={{
+          name="Chart"
+          component={ChartScreen}
+          options={({ navigation }) => ({
             headerRight: () => (
               <Icon
                 type="font-awesome-5"
@@ -131,7 +130,7 @@ export default function App() {
                 onPress={() => navigation.navigate("Home")}
               />
             ),
-          }}
+          })}
         /> */}
       </Drawer.Navigator>
     </NavigationContainer>

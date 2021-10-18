@@ -1,18 +1,18 @@
 import * as React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { List } from "react-native-paper";
-import result from "./test.json";
 import { Icon } from "react-native-elements";
 
 const MyComponent = ({ route, rslt }) => {
   const { result } = rslt;
-  console.log(route.params);
+
   return (
     <ScrollView>
       <View style={{ color: "white", flex: 1 }}>
         {result ? (
-          result?.projects_users.map((el) => (
+          result?.projects_users.map((el, key) => (
             <List.Item
+              key={key}
               title={el.project.name}
               description={el.project.slug}
               right={(props) => (

@@ -7,14 +7,14 @@ import {
   SafeAreaView,
   Image,
   ImageBackground,
-  ProgressBarAndroid,
   ScrollView,
+  Picker,
 } from "react-native";
-
-import { Avatar } from "react-native-paper";
+import { Svg } from "react-native-svg";
+import { Avatar, ProgressBar } from "react-native-paper";
 // import result from "./test.json";
 // import coalition from "./coallition.json";
-const Flex = ({ route, rslt }) => {
+const Profile = ({ route, rslt, dark }) => {
   let { result, coalition } = rslt;
   function coalition_style(bgcolor = "none") {
     return {
@@ -38,19 +38,15 @@ const Flex = ({ route, rslt }) => {
       fontSize: 14,
     };
   }
-  function titleText(color = "#000", bold = "bold", size = 19) {
+  function titleText(color = "#ffffff", bold = "bold", size = 19) {
     return {
       fontSize: size,
-      lineHeight: 50,
       fontWeight: bold,
       color: color,
-      textAlign: "center",
     };
   }
   coalition = coalition.length > 0 ? coalition[0] : coalition;
-  const image = {
-    uri: `${result?.image_url}`,
-  };
+  console.log(coalition);
   const cover = {
     uri: `${coalition?.cover_url}`,
   };
@@ -61,14 +57,10 @@ const Flex = ({ route, rslt }) => {
     <SafeAreaView>
       <ScrollView>
         <View
-          style={[
-            styles.container,
-            {
-              flexDirection: "column",
-              flex: 1,
-              // position: "relative",
-            },
-          ]}
+          style={{
+            flexDirection: "column",
+            flex: 1,
+          }}
         >
           {result ? (
             <>
@@ -91,10 +83,12 @@ const Flex = ({ route, rslt }) => {
                   }}
                 >
                   <View style={coalition_style(coalition?.color)}>
-                    <Image
-                      source={img_coallition}
-                      style={styles.img_coallition}
-                    />
+                    {/* <Svg
+                      uri="https://cdn.intra.42.fr/coalition/image/70/idealists.svg"
+                      width="100%"
+                      height="100%"
+                      color="#000"
+                    /> */}
                   </View>
                   <Text style={titleText(coalition?.color, "500", 14)}>
                     {coalition?.name}
@@ -114,11 +108,57 @@ const Flex = ({ route, rslt }) => {
                     style={styles.img}
                   />
                 </View>
+                {/* <Picker
+                  style={{
+                    backgroundColor: "#000",
+                    color: "#ffff",
+                    width: "5%",
+                  }}
+                >
+                  <Picker.Item label="Java" value="java" />
+                  <Picker.Item label="JavaScript" value="js" />
+                </Picker> */}
               </ImageBackground>
-              <Text style={titleText(coalition?.color)}>{result?.login}</Text>
-              <Text style={styles.nameStyle}>
+              <Text
+                style={[
+                  titleText(coalition?.color),
+                  { textAlign: "center", lineHeight: 50 },
+                ]}
+              >
+                {result?.login}
+              </Text>
+              <Text
+                style={[
+                  titleText(!dark ? "#000" : "#ffffff"),
+                  { textAlign: "center", lineHeight: 50 },
+                ]}
+              >
                 {result?.first_name} {result?.last_name}
               </Text>
+
+              {result.cursus_users[0]?.grade ? (
+                <View
+                  style={{
+                    padding: 20,
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
+                    alignItems: "stretch",
+                  }}
+                >
+                  <Text style={inStyle(coalition?.color)}>Grade</Text>
+                  <Text
+                    style={[
+                      titleText(!dark ? "#000" : "#ffffff", "500", 14),
+                      { textAlign: "right" },
+                    ]}
+                  >
+                    {result.cursus_users[0]?.grade}
+                  </Text>
+                </View>
+              ) : (
+                <></>
+              )}
 
               <View
                 style={{
@@ -129,35 +169,40 @@ const Flex = ({ route, rslt }) => {
                   alignItems: "stretch",
                 }}
               >
-                <Text style={inStyle(coalition?.color)}>Grade</Text>
-                <Text style={styles.textStyle}>
-                  {result.cursus_users[0].grade}
+                <Text style={inStyle(coalition.color)}>Email</Text>
+                <Text
+                  style={[
+                    titleText(!dark ? "#000" : "#ffffff", "500", 14),
+                    { textAlign: "right" },
+                  ]}
+                >
+                  {result.email}
                 </Text>
               </View>
-              <View
-                style={{
-                  padding: 20,
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
-                  alignItems: "stretch",
-                }}
-              >
-                <Text style={inStyle(coalition.color)}>Email</Text>
-                <Text style={styles.textStyle}>{result.email}</Text>
-              </View>
-              <View
-                style={{
-                  padding: 20,
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
-                  alignItems: "stretch",
-                }}
-              >
-                <Text style={inStyle(coalition?.color)}>Phone</Text>
-                <Text style={styles.textStyle}>{result?.phone}</Text>
-              </View>
+
+              {result?.phone != "hidden" ? (
+                <View
+                  style={{
+                    padding: 20,
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
+                    alignItems: "stretch",
+                  }}
+                >
+                  <Text style={inStyle(coalition?.color)}>Phone</Text>
+                  <Text
+                    style={[
+                      titleText(!dark ? "#000" : "#ffffff", "500", 14),
+                      { textAlign: "right" },
+                    ]}
+                  >
+                    {result?.phone}
+                  </Text>
+                </View>
+              ) : (
+                <></>
+              )}
               <View
                 style={{
                   padding: 20,
@@ -168,7 +213,14 @@ const Flex = ({ route, rslt }) => {
                 }}
               >
                 <Text style={inStyle(coalition.color)}>Wallet</Text>
-                <Text style={styles.textStyle}>{result?.wallet}</Text>
+                <Text
+                  style={[
+                    titleText(!dark ? "#000" : "#ffffff", "500", 14),
+                    { textAlign: "right" },
+                  ]}
+                >
+                  {result?.wallet}
+                </Text>
               </View>
               <View
                 style={{
@@ -180,8 +232,16 @@ const Flex = ({ route, rslt }) => {
                 }}
               >
                 <Text style={inStyle(coalition.color)}>Correction point</Text>
-                <Text style={styles.textStyle}>{result.correction_point}</Text>
+                <Text
+                  style={[
+                    titleText(!dark ? "#000" : "#ffffff", "500", 14),
+                    { textAlign: "right" },
+                  ]}
+                >
+                  {result.correction_point}
+                </Text>
               </View>
+
               <View
                 style={{
                   padding: 20,
@@ -192,32 +252,39 @@ const Flex = ({ route, rslt }) => {
                 }}
               >
                 <Text style={inStyle(coalition.color)}>Level</Text>
-                <Text style={styles.textStyle}>
-                  {result.cursus_users[0].level}
+                <Text
+                  style={[
+                    titleText(!dark ? "#000" : "#ffffff", "500", 14),
+                    { textAlign: "right" },
+                  ]}
+                >
+                  {result.cursus_users[
+                    result.cursus_users?.length - 1
+                  ]?.level.toFixed(2)}
                 </Text>
               </View>
 
               <View
                 style={{ width: "100%", padding: 20, alignItems: "center" }}
               >
-                {result.cursus_users[0].skills.map((el, key) => {
+                {result.cursus_users[0]?.skills.map((el, key) => {
                   return (
-                    <>
+                    <View key={key}>
                       <Text
-                        key={key}
-                        style={titleText("#ffffff", "normal", 15)}
+                        style={[
+                          titleText(!dark ? "#000" : "#ffffff", "normal", 15),
+                          { textAlign: "center" },
+                        ]}
                       >
                         {el.name}
                       </Text>
-                      <ProgressBarAndroid
-                        styleAttr="Horizontal"
-                        indeterminate={false}
-                        // progress={`0${el.level.toString().match(/.\d+/g)}`}
-                        progress={0.7}
+                      <ProgressBar
+                        progress={el.level / 10}
+                        // progress={0.6}
                         color={coalition.color}
                         style={{ width: 250 }}
                       />
-                    </>
+                    </View>
                   );
                 })}
               </View>
@@ -232,10 +299,6 @@ const Flex = ({ route, rslt }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // padding: 20,
-  },
   image: {
     // flex: 1,
     justifyContent: "center",
@@ -249,22 +312,12 @@ const styles = StyleSheet.create({
     // marginTop: 10,
     // marginBottom: 10
   },
-  nameStyle: {
-    color: "white",
-    textAlign: "center",
 
-    fontSize: 17,
-  },
-  textStyle: {
-    color: "white",
-    textAlign: "right",
-    fontWeight: "500",
-    fontSize: 14,
-  },
   img_coallition: {
     width: 50,
     height: 50,
+    justifyContent: "center",
   },
 });
 
-export default Flex;
+export default Profile;

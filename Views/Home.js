@@ -39,13 +39,14 @@ const Home = ({ navigation, token, set, theme, setTheme }) => {
               }
             )
             .then((coalition) => {
+              console.log("rs", rs.length);
               set({ result: rs?.data, coalition: coalition?.data });
               navigation.navigate("Profile");
             });
         })
-        .catch((er) => {
+        .catch(() => {
           setLoad(false);
-          alert(er);
+          alert("User Dosnt existe");
         });
   };
 
@@ -73,7 +74,7 @@ const Home = ({ navigation, token, set, theme, setTheme }) => {
               value={text}
             />
             <TouchableOpacity onPress={ft_search} style={styles.button}>
-              <Text> Search </Text>
+              <Text style={{ color: "#ffffff" }}> Search </Text>
             </TouchableOpacity>
           </View>
         ) : (
