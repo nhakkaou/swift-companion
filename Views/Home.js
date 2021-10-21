@@ -11,7 +11,8 @@ import {
   SafeAreaView,
 } from "react-native";
 import axios from "axios";
-const Home = ({ navigation, token, set, theme, setTheme }) => {
+
+const Home = ({ navigation, set, theme, setTheme, token }) => {
   const [text, setvalue] = useState("");
   const [isEnabled, setIsEnabled] = useState(false);
   const [load, setLoad] = useState(false);
@@ -19,6 +20,7 @@ const Home = ({ navigation, token, set, theme, setTheme }) => {
     setIsEnabled(!isEnabled);
     setTheme(!theme);
   };
+
   const ft_search = () => {
     setLoad(true);
     if (text)

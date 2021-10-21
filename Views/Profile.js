@@ -8,15 +8,15 @@ import {
   Image,
   ImageBackground,
   ScrollView,
-  Picker,
   FlatList,
 } from "react-native";
+import { Icon } from "react-native-elements";
 import { SvgUri } from "react-native-svg";
 import { Avatar, ProgressBar } from "react-native-paper";
-// import result from "./test.json";
-// import coalition from "./coallition.json";
+import ModalDropdown from "react-native-modal-dropdown";
 const Profile = ({ route, rslt, dark }) => {
   let { result, coalition } = rslt;
+  const [value, setvalue] = React.useState(0);
   function coalition_style(bgcolor = "none") {
     return {
       backgroundColor: bgcolor,
@@ -47,7 +47,8 @@ const Profile = ({ route, rslt, dark }) => {
     };
   }
   coalition = coalition.length > 0 ? coalition[0] : coalition;
-  console.log(coalition);
+  let arr = [];
+  result?.cursus_users.map((el, key) => arr.push(el.cursus.name));
   const cover = {
     uri: `${coalition?.cover_url}`,
   };
@@ -130,6 +131,7 @@ const Profile = ({ route, rslt, dark }) => {
                     flexWrap: "wrap",
                     alignContent: "center",
                     justifyContent: "center",
+                    position: "relative",
                   }}
                 >
                   <Avatar.Image
@@ -137,17 +139,47 @@ const Profile = ({ route, rslt, dark }) => {
                     source={{ uri: `${result.image_url}` }}
                     style={styles.img}
                   />
+
+                  <Avatar.Text
+                    size={19}
+                    style={{
+                      backgroundColor: result.location ? "#00A400" : "#606770",
+                      position: "absolute",
+                      top: "80%",
+                      left: "59%",
+                    }}
+                  />
                 </View>
-                {/* <Picker
-                  style={{
-                    backgroundColor: "#000",
-                    color: "#ffff",
-                    width: "5%",
-                  }}
-                >
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                </Picker> */}
+                <ModalDropdown
+                  options={arr}
+                  animated={true}
+                  defaultIndex={0}
+                  onSelect={(e) => setvalue(e)}
+                />
+                {/* // <Icon type="font-awesome-5" name="sort-down" color="#000" /> */}
+                {result?.location ? (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      fontSize: 16,
+                      color: "#fff",
+                    }}
+                  >
+                    {result.location}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontWeight: "bold",
+                      fontSize: 16,
+                      color: "#fff",
+                    }}
+                  >
+                    unavailable
+                  </Text>
+                )}
               </ImageBackground>
               <Text
                 style={[
@@ -166,7 +198,7 @@ const Profile = ({ route, rslt, dark }) => {
                 {result?.first_name} {result?.last_name}
               </Text>
 
-              {result.cursus_users[0]?.grade ? (
+              {result.cursus_users[value]?.grade ? (
                 <View
                   style={{
                     padding: 20,
@@ -183,7 +215,7 @@ const Profile = ({ route, rslt, dark }) => {
                       { textAlign: "right" },
                     ]}
                   >
-                    {result.cursus_users[0]?.grade}
+                    {result.cursus_users[value]?.grade}
                   </Text>
                 </View>
               ) : (
@@ -288,9 +320,7 @@ const Profile = ({ route, rslt, dark }) => {
                     { textAlign: "right" },
                   ]}
                 >
-                  {result.cursus_users[
-                    result.cursus_users?.length - 1
-                  ]?.level.toFixed(2)}
+                  {result.cursus_users[value]?.level.toFixed(2)}
                 </Text>
               </View>
 
@@ -303,7 +333,7 @@ const Profile = ({ route, rslt, dark }) => {
                 }}
               >
                 <FlatList
-                  data={result.cursus_users[0]?.skills}
+                  data={result.cursus_users[value]?.skills}
                   renderItem={renderItem}
                   keyExtractor={(item) => item.id}
                 />

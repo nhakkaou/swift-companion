@@ -1,15 +1,14 @@
 import * as React from "react";
-import { View, Text, ScrollView, FlatList } from "react-native";
+import { Text, FlatList } from "react-native";
 import { List } from "react-native-paper";
 import { Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const MyComponent = ({ route, rslt }) => {
+const MyComponent = ({ route, rslt, dark }) => {
   const { result } = rslt;
   const renderList = ({ item }) => {
     return (
       <List.Item
-        // key={key}
         title={item.project.name}
         description={item.project.slug}
         right={(props) => (
@@ -18,7 +17,11 @@ const MyComponent = ({ route, rslt }) => {
               <Text
                 style={{
                   fontSize: 10,
-                  color: item["validated?"] ? "#35ff00" : "#ff2e00",
+                  color: item["validated?"]
+                    ? dark
+                      ? "#35ff00"
+                      : "#037d50"
+                    : "#ff2e00",
                   margin: "auto",
                 }}
               >
@@ -50,7 +53,7 @@ const MyComponent = ({ route, rslt }) => {
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <Text>TEBEEB</Text>
+        ""
       )}
       {/* </View> */}
     </SafeAreaView>

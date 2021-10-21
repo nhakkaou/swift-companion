@@ -4,6 +4,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProfileScreen, ProjectScreen, HomeScreen } from "./Views";
 import axios from "axios";
 import { Icon } from "react-native-elements";
+import { AsyncStorage } from "react-native";
 
 const darkTheme = {
   dark: true,
@@ -26,9 +27,9 @@ export default function App() {
     <HomeScreen
       navigation={navigation}
       set={setRes}
-      token={token}
       theme={dark}
       setTheme={setDark}
+      token={token}
     />
   );
 
@@ -45,26 +46,36 @@ export default function App() {
   );
   const [result, setRes] = React.useState([]);
   const [token, setToken] = React.useState("");
-  const [delay, setDelay] = React.useState(7200000);
   const [dark, setDark] = React.useState(true);
-  React.useEffect(() => {
-    console.log("DKHALT");
-    axios
-      .post(
-        "https://api.intra.42.fr/oauth/token",
-        {
-          grant_type: "client_credentials",
-          client_id: uid,
-          client_secret: client,
-        },
-        { timeout: 2000 }
-      )
-      .then((tk) => {
-        setToken(tk.data?.access_token);
-        setDelay(tk.data?.expires_in);
-      })
-      .catch((er) => console.log(er));
-    console.log(token);
+  React.useEffect(async () => {
+    try {
+      console.log("test");
+      const token = await AsyncStorage.getItem("TOKEN");
+      const date = await AsyncStorage.getItem("DATE");
+      if (!token && date > Date.now())
+        axios
+          .post(
+            "https://api.intra.42.fr/oauth/token",
+            {
+              grant_type: "client_credentials",
+              client_id: uid,
+              client_secret: client,
+            },
+            { timeout: 2000 }
+          )
+          .then(async (tk) => {
+            await AsyncStorage.setItem("TOKEN", tk.data.access_token);
+            await AsyncStorage.setItem(
+              "DATE",
+              tk.data.expires_in + tk.data.created_at
+            );
+            console.log(tk.data);
+            setToken(tk.data.access_token);
+          });
+      else setToken(token);
+    } catch (er) {
+      console.log(er);
+    }
   }, []);
   // setInterval(() => {
   //   alert("Expire");
