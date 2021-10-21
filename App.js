@@ -47,32 +47,36 @@ export default function App() {
   const [result, setRes] = React.useState([]);
   const [token, setToken] = React.useState("");
   const [dark, setDark] = React.useState(true);
-  React.useEffect(async () => {
+  React.useEffect(() => {
     try {
-      console.log("test");
-      const token = await AsyncStorage.getItem("TOKEN");
-      const date = await AsyncStorage.getItem("DATE");
-      if (!token && date > Date.now())
-        axios
-          .post(
-            "https://api.intra.42.fr/oauth/token",
-            {
-              grant_type: "client_credentials",
-              client_id: uid,
-              client_secret: client,
-            },
-            { timeout: 2000 }
-          )
-          .then(async (tk) => {
-            await AsyncStorage.setItem("TOKEN", tk.data.access_token);
-            await AsyncStorage.setItem(
-              "DATE",
-              tk.data.expires_in + tk.data.created_at
-            );
-            console.log(tk.data);
-            setToken(tk.data.access_token);
-          });
-      else setToken(token);
+      async function GetToken() {
+        console.log("test");
+        const token = await AsyncStorage.getItem("TOKEN");
+        const date = await AsyncStorage.getItem("DATE");
+        console.log(token, date);
+        if (!token || date || date > Date.now()) {
+          console.log("HIII");
+          axios
+            .post(
+              "https://api.intra.42.fr/oauth/token",
+              {
+                grant_type: "client_credentials",
+                client_id: uid,
+                client_secret: client,
+              },
+              { timeout: 2000 }
+            )
+            .then(async (tk) => {
+              setToken(tk.data.access_token);
+              await AsyncStorage.setItem("TOKEN", tk.data.access_token);
+              await AsyncStorage.setItem(
+                "DATE",
+                new Date(tk.data.created_at * 1000 + tk.data.expires_in * 1000)
+              );
+            });
+        } else setToken(token);
+      }
+      GetToken();
     } catch (er) {
       console.log(er);
     }
