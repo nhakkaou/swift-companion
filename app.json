@@ -4,7 +4,7 @@
     "slug": "swift-companies",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/1337.png",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/1337.png",
       "resizeMode": "contain",
@@ -15,7 +15,8 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "io.expo.client"
     },
     "android": {
       "adaptiveIcon": {
