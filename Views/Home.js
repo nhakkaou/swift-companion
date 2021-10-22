@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const Home = ({ navigation, set, theme, setTheme }) => {
@@ -46,12 +46,12 @@ const Home = ({ navigation, set, theme, setTheme }) => {
               console.log(
                 new Date(tk.data.created_at * 1000 + tk.data.expires_in * 1000)
               );
-              await AsyncStorage.setItem("TOKEN", tk.data.access_token);
-              await AsyncStorage.setItem(
-                "DATE",
-                tk.data.created_at + tk.data.expires_in * 1000
-              );
-            });
+              await AsyncStorage.setItem("data", tk.data);
+              // await AsyncStorage.setItem(
+
+              // );
+            })
+            .catch((er) => console.log(er));
         } else setToken(token);
       }
       GetToken();
