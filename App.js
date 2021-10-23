@@ -3,7 +3,6 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { ProfileScreen, ProjectScreen, HomeScreen } from "./Views";
 import { Icon } from "react-native-elements";
-
 const darkTheme = {
   dark: true,
   colors: {

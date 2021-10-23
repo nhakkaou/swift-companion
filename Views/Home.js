@@ -10,54 +10,48 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import storage from "../Storage/storage";
 import axios from "axios";
+import { uid, client } from "../config.json";
 
 const Home = ({ navigation, set, theme, setTheme }) => {
   const [text, setvalue] = useState("");
   const [load, setLoad] = useState(false);
   const [token, setToken] = React.useState("");
-  const uid =
-    "8b3f2aa1e1b4e9ea2ed2399b3783dba79813b948c9ecbb9555f7927a7b530e0a";
-  const client =
-    "fdf4044597bc43b22cf442e825051dda952c834d1d16d8aebfdb6c223df3a37d";
+  const getToken = () => {
+    console.log("New TOKEN")
+    axios
+      .post(
+        "https://api.intra.42.fr/oauth/token",
+        {
+          grant_type: "client_credentials",
+          client_id: uid,
+          client_secret: client,
+        },
+        { timeout: 2000 }
+      )
+      .then(async (tk) => {
+        setToken(tk.data.access_token);
+        await storage.save({ key: "dataToken", data: tk.data });
+      });
+  };
   React.useEffect(() => {
-    try {
-      async function GetToken() {
-        console.log("test");
-        const token = await AsyncStorage.getItem("TOKEN");
-        const date = await AsyncStorage.getItem("DATE");
-        console.log(token, date);
-        if (!token || !date || date > Date.now()) {
-          console.log("HIII");
-          axios
-            .post(
-              "https://api.intra.42.fr/oauth/token",
-              {
-                grant_type: "client_credentials",
-                client_id: uid,
-                client_secret: client,
-              },
-              { timeout: 2000 }
-            )
-            .then(async (tk) => {
-              setToken(tk.data.access_token);
-              console.log(tk.data);
-              console.log(
-                new Date(tk.data.created_at * 1000 + tk.data.expires_in * 1000)
-              );
-              await AsyncStorage.setItem("data", tk.data);
-              // await AsyncStorage.setItem(
-
-              // );
-            })
-            .catch((er) => console.log(er));
-        } else setToken(token);
+    async function GetToken() {
+      try {
+        const data = await storage.load({
+          key: "dataToken",
+        });
+        const token = data?.access_token;
+        const date = (data?.created_at + data?.expires_in) * 1000;
+        if (!token || !date || Date.now() < date) getToken();
+        else setToken(token);
+      } catch (er) {
+        if (er.message === "NotFoundError" || er.message === "ExpiredError") {
+          getToken();
+        } else console.log(er);
       }
-      GetToken();
-    } catch (er) {
-      console.log(er);
     }
+    GetToken();
   }, []);
   const ft_search = () => {
     setLoad(true);
