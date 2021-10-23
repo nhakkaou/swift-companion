@@ -43,7 +43,6 @@ const Home = ({ navigation, set, theme, setTheme }) => {
         });
         const token = data?.access_token;
         const date = (data?.created_at + data?.expires_in) * 1000;
-        console.log(token, date, Date.now());
         if (!token || !date || Date.now() >= date) getToken();
         else setToken(token);
       } catch (er) {
