@@ -68,7 +68,6 @@ const Profile = ({ route, rslt, dark }) => {
         </Text>
         <ProgressBar
           progress={item.level / 10}
-          // progress={0.6}
           color={coalition.color}
           style={{ width: 250 }}
         />

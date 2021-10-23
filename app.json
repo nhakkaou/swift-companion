@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "swift-companies",
-    "slug": "swift-companies",
+    "name": "swift-companion",
+    "slug": "swift-companion",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
