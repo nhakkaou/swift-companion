@@ -19,7 +19,7 @@ const Home = ({ navigation, set, theme, setTheme }) => {
   const [load, setLoad] = useState(false);
   const [token, setToken] = React.useState("");
   const getToken = () => {
-    console.log("New TOKEN")
+    console.log("New TOKEN");
     axios
       .post(
         "https://api.intra.42.fr/oauth/token",
@@ -43,12 +43,13 @@ const Home = ({ navigation, set, theme, setTheme }) => {
         });
         const token = data?.access_token;
         const date = (data?.created_at + data?.expires_in) * 1000;
-        if (!token || !date || Date.now() < date) getToken();
+        console.log(token, date, Date.now());
+        if (!token || !date || Date.now() >= date) getToken();
         else setToken(token);
       } catch (er) {
-        if (er.message === "NotFoundError" || er.message === "ExpiredError") {
+        if (er.name === "NotFoundError" || er.name === "ExpiredError")
           getToken();
-        } else console.log(er);
+        console.log(er);
       }
     }
     GetToken();
@@ -137,9 +138,6 @@ const Home = ({ navigation, set, theme, setTheme }) => {
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   sousContainer: {
     justifyContent: "center",
     alignItems: "center",

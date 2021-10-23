@@ -362,12 +362,6 @@ const styles = StyleSheet.create({
     // marginTop: 10,
     // marginBottom: 10
   },
-
-  img_coallition: {
-    width: 50,
-    height: 50,
-    justifyContent: "center",
-  },
 });
 
 export default Profile;
